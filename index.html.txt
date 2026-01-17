@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>เกมจับโกหก</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    color: white;
+    text-align: center;
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden {
+    display: none;
+}
+
+button {
+    width: 220px;
+    padding: 14px;
+    margin: 8px;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+.card {
+    background: rgba(0,0,0,0.25);
+    padding: 20px;
+    border-radius: 16px;
+    margin: 10px;
+    width: 260px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- หน้าเริ่ม -->
+    <div id="home">
+        <h1>🕵️ เกมจับโกหก</h1>
+        <p>มีหนึ่งคนโกหก… คุณจับได้ไหม?</p>
+        <button onclick="startGame()">เริ่มเกม</button>
+    </div>
+
+    <!-- หน้าเลือกผู้ต้องสงสัย -->
+    <div id="game" class="hidden">
+        <h2>ใครคือคนโกหก?</h2>
+        <div id="players"></div>
+    </div>
+
+    <!-- หน้าผลลัพธ์ -->
+    <div id="result" class="hidden">
+        <h2 id="resultText"></h2>
+        <button onclick="restart()">เล่นใหม่</button>
+    </div>
+
+</div>
+
+<script>
+/* =====================
+   ตัวแปรหลักของเกม
+===================== */
+
+// รายชื่อผู้ต้องสงสัย
+const playerNames = ["เอ", "บี", "ซี", "ดี"];
+
+// คนโกหก (จะสุ่ม)
+let liar = "";
+
+/* =====================
+   เริ่มเกม
+===================== */
+function startGame() {
+    // ซ่อนหน้าแรก
+    document.getElementById("home").classList.add("hidden");
+
+    // แสดงหน้าเกม
+    document.getElementById("game").classList.remove("hidden");
+
+    // สุ่มคนโกหก
+    liar = playerNames[Math.floor(Math.random() * playerNames.length)];
+
+    // แสดงปุ่มตัวละคร
+    renderPlayers();
+}
+
+/* =====================
+   แสดงผู้ต้องสงสัย
+===================== */
+function renderPlayers() {
+    const container = document.getElementById("players");
+    container.innerHTML = "";
+
+    playerNames.forEach(name => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <h3>${name}</h3>
+            <button onclick="accuse('${name}')">กล่าวหา</button>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+/* =====================
+   เมื่อผู้เล่นเลือก
+===================== */
+function accuse(name) {
+    document.getElementById("game").classList.add("hidden");
+    document.getElementById("result").classList.remove("hidden");
+
+    if (name === liar) {
+        document.getElementById("resultText").innerText =
+            `🎉 ถูกต้อง! ${name} คือคนโกหก`;
+    } else {
+        document.getElementById("resultText").innerText =
+            `❌ ผิด! คนโกหกคือ ${liar}`;
+    }
+}
+
+/* =====================
+   รีสตาร์ทเกม
+===================== */
+function restart() {
+    document.getElementById("result").classList.add("hidden");
+    document.getElementById("home").classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
